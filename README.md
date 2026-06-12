@@ -351,22 +351,6 @@ Inference:    67ms
 
 ---
 
-## 🧪 Key Concepts Explained
-
-### Explainable AI (Grad-CAM)
-Gradient-weighted Class Activation Mapping backpropagates the gradient of the predicted class score through the final convolutional layer. Regions with large positive gradients are highlighted — these are the pixels the model "looked at" most when making its prediction. For lung cancer detection, these should ideally align with nodules or masses visible to radiologists.
-
-### Uncertainty Estimation (MC Dropout)
-Instead of treating the neural network as a deterministic function, Monte Carlo Dropout approximates Bayesian inference. By keeping Dropout layers active at test time and running N forward passes, we get a distribution over predictions. The variance (entropy) of this distribution quantifies the model's epistemic uncertainty — how confident it is in its prediction.
-
-### Fairness Analysis
-A model may achieve high overall accuracy while performing poorly for specific patient subgroups (e.g., elderly patients, women, non-smokers). Equalized Odds requires that True Positive Rate (sensitivity/recall) and False Positive Rate be equal across demographic groups. Large gaps indicate potential bias requiring retraining with augmented subgroup data.
-
-### Lightweight Deployment
-Rural healthcare centers often lack GPU infrastructure. MobileNetV2 (~3.4M parameters, ~45ms CPU latency) and EfficientNetB0 (~5.3M parameters, ~68ms CPU latency) were specifically designed for constrained environments. Both achieve near-ResNet50 accuracy at a fraction of the compute cost.
-
----
-
 ## 📄 License
 
 MIT License — see `LICENSE` for details.
