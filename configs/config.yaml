@@ -1,0 +1,100 @@
+# ============================================================
+# TrustLung AI — Master Configuration File
+# ============================================================
+# All hyperparameters, paths, and settings are centralized here.
+# Modify this file to change project behavior without touching code.
+
+project:
+  name: "TrustLungAI"
+  version: "1.0.0"
+  seed: 42
+  device: "auto"   # "auto" | "cpu" | "cuda" | "mps"
+
+# ============================================================
+# DATA PATHS
+# ============================================================
+data:
+  raw_image_dir: "data/raw/images"
+  raw_clinical_csv: "data/raw/clinical/lung_cancer_clinical.csv"
+  processed_dir: "data/processed"
+  image_size: [224, 224]
+  num_classes: 3                # Normal, Benign, Malignant
+  class_names: ["Normal", "Benign", "Malignant"]
+  test_split: 0.15
+  val_split: 0.15
+  augment: true
+
+# ============================================================
+# MODEL SETTINGS
+# ============================================================
+model:
+  architecture: "EfficientNetB0"   # "MobileNetV2" | "EfficientNetB0"
+  pretrained: true
+  fine_tune: true
+  fine_tune_layers: 20            # number of layers to unfreeze
+  dropout_rate: 0.4
+  mc_dropout_samples: 50          # Monte Carlo Dropout samples
+
+# ============================================================
+# TRAINING SETTINGS
+#
+training:
+  batch_size: 32
+  epochs: 50
+  learning_rate: 0.001
+  fine_tune_lr: 0.0001
+  optimizer: "adam"
+  loss: "categorical_crossentropy"
+  early_stopping_patience: 10
+  reduce_lr_patience: 5
+  reduce_lr_factor: 0.5
+  min_lr: 0.000001
+  class_weight: true              # handle class imbalance
+
+# ============================================================
+# EXPLAINABILITY
+# ============================================================
+explainability:
+  gradcam_layer: "auto"           # "auto" detects last conv layer
+  heatmap_alpha: 0.5
+  save_top_k: 20                  # save top-k heatmaps
+
+# ============================================================
+# FALSE POSITIVE REDUCTION
+# ============================================================
+false_positive:
+  confidence_threshold: 0.75     # min confidence for malignant prediction
+  ensemble_models: ["MobileNetV2", "EfficientNetB0"]
+  calibration_method: "isotonic" # "isotonic" | "platt"
+
+# ============================================================
+# FAIRNESS ANALYSIS
+# ============================================================
+fairness:
+  demographic_columns:
+    - "age_group"
+    - "gender"
+    - "smoking_status"
+  fairness_metrics:
+    - "accuracy"
+    - "recall"
+    - "precision"
+    - "f1"
+
+# ============================================================
+# OUTPUT PATHS
+# ============================================================
+outputs:
+  models_dir: "outputs/models"
+  plots_dir: "outputs/plots"
+  reports_dir: "outputs/reports"
+  heatmaps_dir: "outputs/heatmaps"
+  logs_dir: "outputs/logs"
+
+# ============================================================
+# BENCHMARKING
+# ============================================================
+benchmarking:
+  num_warmup_runs: 5
+  num_benchmark_runs: 100
+  batch_sizes: [1, 8, 16, 32]
